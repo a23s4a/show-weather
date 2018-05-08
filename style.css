@@ -1,0 +1,25 @@
+.site-top {
+	background-color: #00547f;
+}
+img {
+	width: 100%;
+	max-width: 200px;
+	//min-width: 200px;
+}
+
+#about {
+	word-wrap: break-word;
+}
+
+.side-panel {
+	//background-color: #17a2b8;
+	background-color: #37c2c8;
+}
+
+.bg-alpha {
+	background-color: rgb(55,194,200,0.5);
+}
+
+h4 {
+	font-family: 'Ubuntu', arial;
+}
