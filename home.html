@@ -10,45 +10,66 @@
 </head>
 <body>
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="margin-top:30px;">
         <div class="row">
-            <div class="col-3">
+            <div class="col-2"> </div>
+            <div class="col-8">
+                <h2 class="text-center">Погода в Вашем городе</h2>
+                <h3 id="city_name" class="text-center"> </h3>
+                <button class="btn btn-primary" id="temperature" class="text-center"> </button>
+                <h3 class="text-center" id="weather"> </h3>
             </div>
-            <div class="col-6">
-    <h1>TTT</h1>
-            </div>
-            <div class="col-3">
-            </div>
+            <div class="col-2"> </div>
         </div>
     </div>
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-<script>
-    //$(document).ready(function() {
-    var x;
-        function getLocalWeather(latitude, longitude) {
-            weatherServiceUrl = 'https://fcc-weather-api.glitch.me/';
-            requestWeather = 'api/current?lon=' + latitude + '&lat=' + longitude;
-            $.getJSON(weatherServiceUrl + requestWeather, function(json) {
-                x = json;
-                console.log(JSON.stringify(json));
-            });
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+    <script>
+        //$(document).ready(function() {
+        var x;
+function getLocalWeather(latitude, longitude) {
+    weatherServiceUrl = 'https://fcc-weather-api.glitch.me/';
+    requestWeather = 'api/current?lon=' + longitude + '&lat=' + latitude;
+    $.getJSON(weatherServiceUrl + requestWeather, function(json) {
+        x = json;
+        var cityName = 'Ваше местоположение: ' + x.name;
+        var temperatureC = Math.round(x.main.temp) + 'C\u00b0';
+        var temperatureF = CtoF(Math.round(x.main.temp)) + 'F\u00b0';
+        var temp_htmlC = 'Температура: ' + temperatureC;
+        var temp_htmlF = 'Температура: ' + temperatureF;
+        var weather = '<img src=' + x.weather[0].icon + ' alt="weather">';
+        function switchTemp() {
+            if ($('#temperature').text().indexOf('C\u00b0') != -1) {
+                $('#temperature').text(temp_htmlF);
+            } else if ($('#temperature').text().indexOf('F\u00b0') != -1) {
+                $('#temperature').text(temp_htmlC);
+            }
         }
-        function locationSuccess(position) {
-            latitude = position.coords.latitude;
-            longitude = position.coords.longitude;
-            getLocalWeather(latitude, longitude);
-        }
+        $('#city_name').html(cityName);
+        $('#temperature').text(temp_htmlC);
+        $('#temperature').on('click', switchTemp);
+        $('#weather').html(weather);
+        console.log(JSON.stringify(json));
+    });
+}
+function locationSuccess(position) {
+    latitude = position.coords.latitude;
+    longitude = position.coords.longitude;
+    getLocalWeather(latitude, longitude);
+}
 
-        function locationFail() {
-            console.log('Ну удалось определить Ваше местоположение');
-            latitude = 55.746227;
-            longitude = 37.681869;
-            getLocalWeather(latitude, longitude);
-        }
-        navigator.geolocation.getCurrentPosition(locationSuccess, locationFail);
-    //});
-</script>
+function locationFail() {
+    console.log('Ну удалось определить Ваше местоположение');
+    latitude = 55.7439976;
+    longitude = 37.6820132;
+    getLocalWeather(latitude, longitude);
+}
+function CtoF(temp) {
+    return temp * 9 / 5 + 32;
+}
+navigator.geolocation.getCurrentPosition(locationSuccess, locationFail);
+//});
+    </script>
 </body>
 </html>
